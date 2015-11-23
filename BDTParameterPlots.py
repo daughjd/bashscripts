@@ -34,7 +34,7 @@ pylab.grid()
 pylab.title("Space Angle (SplineMod-SplinePara)")
 pylab.xlabel('Space Angle (Deg)')
 pylab.ylabel('mHz')
-pylab.savefig("LES_Spline_ParaSpline_Diff_FinalLevelDist")
+pylab.savefig("LES_Spline_ParaSpline_Diff_FinalLevelDist_G1460")
 
 
 ### Errors ###

@@ -57,7 +57,7 @@ datums.close()
 
 ### 9622 ###
 #datums = tables.openFile('third_time/bdt_scored/')
-datums = tables.openFile('third_time/Level4_IC86.2011_corsika.009622.100K.L6Out_Third_WNoRecoScore.hdf5')
+datums = tables.openFile('third_time/Level4_IC86.2011_corsika.009622.100K.L6Out_BDTScored.hdf5')
 
 dc12_c9622 = datums.root.FilterMask.col('DeepCoreFilter_11')
 #tldc12_c9622 = datums.root.FilterMask.col('DeepCoreFilter_TwoLayerExp_12')
@@ -100,6 +100,10 @@ les_nch_clean_c9622 = datums.root.L4_Variables_LES.col('NCh_Clean')
 les_hlc_c9622 = datums.root.L4_Variables_LES.col('Nch_HLC')
 #hes_nch_clean_c9622 = datums.root.L4_Variables_HES.col('NCh_Clean')
 #hes_hlc_c9622 = datums.root.L4_Variables_HES.col('Nch_HLC')
+event_id_c9622 = datums.root.I3MCTree.col('Event')
+shower_zenith_c9622 = datums.root.I3MCTree.col('zenith')
+shower_energy_c9622 = datums.root.I3MCTree.col('energy')
+
 
 para1_c9622 = datums.root.SplineMPEModParaboloidFitParams.col('err1')
 para2_c9622 = datums.root.SplineMPEModParaboloidFitParams.col('err2')
@@ -114,7 +118,7 @@ datums.close()
 
 ### 9255 ###
 #datums = tables.openFile('third_time/bdt_scored/')
-datums = tables.openFile('third_time/Level3_IC86.2011_corsika.009255.49805Files.L6Out_Third_WNoRecoScore.hdf5')
+datums = tables.openFile('third_time/Level3_IC86.2011_corsika.009255.49805Files.L6Out_BDTScored.hdf5')
 
 dc12_c9255 = datums.root.FilterMask.col('DeepCoreFilter_11')
 #tldc12_c9255 = datums.root.FilterMask.col('DeepCoreFilter_TwoLayerExp_12')
@@ -157,6 +161,10 @@ les_nch_clean_c9255 = datums.root.L4_Variables_LES.col('NCh_Clean')
 les_hlc_c9255 = datums.root.L4_Variables_LES.col('Nch_HLC')
 #hes_nch_clean_c9255 = datums.root.L4_Variables_HES.col('NCh_Clean')
 #hes_hlc_c9255 = datums.root.L4_Variables_HES.col('Nch_HLC')
+event_id_c9255 = datums.root.I3MCTree.col('Event')
+shower_zenith_c9255 = datums.root.I3MCTree.col('zenith')
+shower_energy_c9255 = datums.root.I3MCTree.col('energy')
+
 
 para1_c9255 = datums.root.SplineMPEModParaboloidFitParams.col('err1')
 para2_c9255 = datums.root.SplineMPEModParaboloidFitParams.col('err2')
@@ -215,6 +223,10 @@ les_nch_clean_data = datums.root.L4_Variables_LES.col('NCh_Clean')
 les_hlc_data = datums.root.L4_Variables_LES.col('Nch_HLC')
 hes_nch_clean_data = datums.root.L4_Variables_HES.col('NCh_Clean')
 hes_hlc_data = datums.root.L4_Variables_HES.col('Nch_HLC')
+time_mjd = datums.root.I3EventHeader.col('time_start_mjd_day')
+pulse_time_data = datums.root.LET_RecoPulses.col('time')
+pulse_event_data = datums.root.LET_RecoPulses.col('Event')
+pulse_run_data = datums.root.LET_RecoPulses.col('Run')
 
 para1_data = datums.root.SplineMPEModParaboloidFitParams.col('err1')
 para2_data = datums.root.SplineMPEModParaboloidFitParams.col('err2')
@@ -223,89 +235,15 @@ sig_para_data = numpy.sqrt(para1_data**2 + para2_data**2) / numpy.sqrt(2)
 
 datums.close()
 
-'''
-### Acquire NuTau Info ###
-#datums = tables.openFile('third_time/bdt_scored/genie_ic.1504_1604.nutau_allruns.AtmoWeight.L5Out.hdf5')
-datums = tables.openFile('third_time/genie_ic.1504_1604.combo_nutau_nutaubar.L6Out_Third.hdf5')
-
-les_nutau = datums.root.L4Bool_LES.col('value')
-hes_nutau = datums.root.L4Bool_HES.col('value')
-les_l5bool_nutau = datums.root.L5Bool_LES.col('value')
-hes_l5bool_nutau = datums.root.L5Bool_HES.col('value')
-bdt_les_nutau = datums.root.LES_L6_BDTScore.col('value')
-bdt_hes_nutau = datums.root.HES_L6_BDTScore.col('value')
-splinemod_zen_nutau = datums.root.SplineMPEMod.col('zenith')
-splinemod_azi_nutau = datums.root.SplineMPEMod.col('azimuth')
-spline_para_zen_nutau = datums.root.SplineMPEModParaboloid.col('zenith')
-spline_para_azi_nutau = datums.root.SplineMPEModParaboloid.col('azimuth')
-tight_spe6_zen_nutau = datums.root.SPEFit6_DC_Tight.col('zenith')
-tight_spe6_azi_nutau = datums.root.SPEFit6_DC_Tight.col('azimuth')
-noearly_spe2_zen_nutau = datums.root.SPEFit2_EarlyRemoved.col('zenith')
-noearly_spe2_azi_nutau = datums.root.SPEFit2_EarlyRemoved.col('azimuth')
-avg_distq_nutau = datums.root.SPEFit6_DCCharacteristics.col('avg_dom_dist_q_tot_dom')
-lempty_nutau = datums.root.SPEFit6_DCCharacteristics.col('empty_hits_track_length')
-separation_nutau = datums.root.SPEFit6_DCCharacteristics.col('track_hits_separation_length')
-spe6_rlogl_nutau = datums.root.SPEFit6_DCFitParams.col('rlogl')
-spe6_logl_nutau = datums.root.SPEFit6_DCFitParams.col('logl')
-linefit_zen_nutau = datums.root.LineFit_DC.col('zenith')
-linefit_azi_nutau = datums.root.LineFit_DC.col('azimuth')
-#firsthlc_x_nutau = datums.root.FirstHLC.col('x')
-#firsthlc_y_nutau = datums.root.FirstHLC.col('y')
-#firsthlc_z_nutau = datums.root.FirstHLC.col('z')
-dhd_nutau = datums.root.SPEFit6_DC_DirectHitsD.col('n_dir_pulses')
-nlated_nutau = datums.root.SPEFit6_DC_DirectHitsD.col('n_late_pulses')
-nearlyd_nutau = datums.root.SPEFit6_DC_DirectHitsD.col('n_early_pulses')
-ldird_nutau = datums.root.SPEFit6_DC_DirectHitsD.col('dir_track_length')
-#bdtscore_nutau = datums.root.LES_L5_BDTScore.col('value')
-finite_x_nutau = datums.root.SPEFit6_DC_Finite.col('x')
-finite_y_nutau = datums.root.SPEFit6_DC_Finite.col('y')
-finite_z_nutau = datums.root.SPEFit6_DC_Finite.col('z')
-finite_length_nutau = datums.root.SPEFit6_DC_FiniteCuts.col('length')
-finite_startfract_nutau = datums.root.SPEFit6_DC_FiniteCuts.col('start_fraction')
-finite_endfract_nutau = datums.root.SPEFit6_DC_FiniteCuts.col('end_fraction')
-#fr_llh_inf_nutau = datums.root.StartStopProb_StartStopParams.col('llh_inf_track')
-#fr_llh_start_nutau = datums.root.StartStopProb_StartStopParams.col('llh_starting_track')
-#fr_llh_stop_nutau = datums.root.StartStopProb_StartStopParams.col('llh_stopping_track')
-vetotrackcharge_nutau = datums.root.L5VetoTrackVetoCharge.col('value')
-vetotrackhits_nutau = datums.root.L5VetoTrackVetoChannels.col('value')
-les_nch_clean_nutau = datums.root.L4_Variables_LES.col('NCh_Clean')
-les_hlc_nutau = datums.root.L4_Variables_LES.col('Nch_HLC')
-hes_nch_clean_nutau = datums.root.L4_Variables_HES.col('NCh_Clean')
-hes_hlc_nutau = datums.root.L4_Variables_HES.col('Nch_HLC')
-split_hes_nutau = datums.root.L4_Variables_HES.col('SplitEvent')
-
-#para1_nutau = datums.root.SPEFit6Paraboloid_DCFitParams.col('err1')
-#para2_nutau = datums.root.SPEFit6Paraboloid_DCFitParams.col('err2')
-#sig_para_nutau = numpy.sqrt(para1_nutau**2 + para2_nutau**2) / numpy.sqrt(2)
-
-
-intpartx_nutau = datums.root.InteractionParticle.col('x')
-intparty_nutau = datums.root.InteractionParticle.col('y')
-intpartz_nutau = datums.root.InteractionParticle.col('z')
-int_zen_nutau = datums.root.InteractionParticle.col('zenith')
-int_azi_nutau = datums.root.InteractionParticle.col('azimuth')
-chkgrbeventw_nutau = datums.root.ChkGRBEventWeight.col('value')
-primary_energy_nutau = datums.root.PrimaryNu.col('energy')
-primary_zenith_nutau = datums.root.PrimaryNu.col('zenith')
-primary_azi_nutau = datums.root.PrimaryNu.col('azimuth')
-indc_nutau = datums.root.InDC.col('value')
-intldc_nutau = datums.root.InExpDC.col('value')
-atmo_nutau = datums.root.AtmoWeight.col('value')
-oweight_nutau = datums.root.I3MCWeightDict.col('OneWeight')
-
-datums.close()
-
-'''
 ### Acquire NuMu Table Info ###
 
 #datums = tables.openFile('third_time/bdt_scored/genie_ic.1304_1404_Combo_NuMu.L5.hdf5')
-datums = tables.openFile('third_time/Genie_NuMu_Combo_AllSubs.L6Out_Third_WNoRecoScore.hdf5')
+datums = tables.openFile('paper_tables/Merged_IC86.2012_genie_ic.1460.AllFiles.FINAL.hdf5')
 
 dc12_numu = datums.root.FilterMask.col('DeepCoreFilter_12')
 tldc12_numu = datums.root.FilterMask.col('DeepCoreFilter_TwoLayerExp_12')
 les_numu = datums.root.L4Bool_LES.col('value')
 hes_numu = datums.root.L4Bool_HES.col('value')
-alt_bdt_les_numu = datums.root.NoReco_LES_L6_BDTScore.col('value')
 bdt_les_numu = datums.root.LES_L6_BDTScore.col('value')
 bdt_hes_numu = datums.root.HES_L6_BDTScore.col('value')
 splinemod_zen_numu = datums.root.SplineMPEMod.col('zenith')
@@ -341,6 +279,10 @@ les_nch_clean_numu = datums.root.L4_Variables_LES.col('NCh_Clean')
 les_hlc_numu = datums.root.L4_Variables_LES.col('Nch_HLC')
 hes_nch_clean_numu = datums.root.L4_Variables_HES.col('NCh_Clean')
 hes_hlc_numu = datums.root.L4_Variables_HES.col('Nch_HLC')
+pulse_time_numu = datums.root.LET_RecoPulses.col('time')
+pulse_event_numu = datums.root.LET_RecoPulses.col('Event')
+pulse_run_numu = datums.root.LET_RecoPulses.col('Run')
+
 
 para1_numu = datums.root.SplineMPEModParaboloidFitParams.col('err1')
 para2_numu = datums.root.SplineMPEModParaboloidFitParams.col('err2')
@@ -355,8 +297,8 @@ int_azi_numu = datums.root.InteractionParticle.col('azimuth')
 primary_energy_numu = datums.root.PrimaryNu.col('energy')
 primary_zenith_numu = datums.root.PrimaryNu.col('zenith')
 primary_azi_numu = datums.root.PrimaryNu.col('azimuth')
-indc_numu = datums.root.InDC.col('value')
-intldc_numu = datums.root.InExpDC.col('value')
+#indc_numu = datums.root.InDC.col('value')
+#intldc_numu = datums.root.InExpDC.col('value')
 atmo_numu = datums.root.AtmoWeight.col('value')
 oweight_numu = datums.root.I3MCWeightDict.col('OneWeight')
 cc_numu = numpy.abs(datums.root.InteractionParticle.col('pdg_encoding')) ==13
@@ -413,6 +355,9 @@ les_nch_clean_nugmu = datums.root.L4_Variables_LES.col('NCh_Clean')
 les_hlc_nugmu = datums.root.L4_Variables_LES.col('Nch_HLC')
 hes_nch_clean_nugmu = datums.root.L4_Variables_HES.col('NCh_Clean')
 hes_hlc_nugmu = datums.root.L4_Variables_HES.col('Nch_HLC')
+pulse_time_nugmu = datums.root.LET_RecoPulses.col('time')
+pulse_event_nugmu = datums.root.LET_RecoPulses.col('Event')
+pulse_run_nugmu = datums.root.LET_RecoPulses.col('Run')
 
 para1_nugmu = datums.root.SplineMPEModParaboloidFitParams.col('err1')
 para2_nugmu = datums.root.SplineMPEModParaboloidFitParams.col('err2')
@@ -617,6 +562,8 @@ les_nch_clean_nuge[les_nch_clean_nuge==-1] = 0
 hes_nch_clean_nuge[hes_nch_clean_nuge==-1] = 0
 merged_nch_nuge = les_nch_clean_nuge + hes_nch_clean_nuge
 
+merged_nch_c9622 = les_nch_clean_c9622
+merged_nch_c9255 = les_nch_clean_c9255
 
 
 fr_R_c7437 = numpy.sqrt((finite_x_c7437-46)**2 + (finite_y_c7437+35)**2)
@@ -773,15 +720,6 @@ samp2_final_level_c9622 = ((les_preselect_c9622==1)*(bdt_les_c9622>0.0)*(numpy.c
 samp2_final_level_c9255 = ((les_preselect_c9255==1)*(bdt_les_c9255>0.0)*(numpy.cos(splinemod_zen_c9255)<0.087))*numpy.isfinite(fr_R_c9255)
 
 
-alt_samp2_final_level_numu = (((les_preselect_numu==1)*(alt_bdt_les_numu>0.0) + (hes_preselect_numu==1)*(bdt_hes_numu>-0.01))*(numpy.cos(splinemod_zen_numu)<0.087))*numpy.isfinite(fr_R_numu)
-alt_samp2_final_level_nugmu = ((les_preselect_nugmu==1)*(alt_bdt_les_nugmu>0.0) + (hes_preselect_nugmu==1)*(bdt_hes_nugmu>-0.01))*(numpy.cos(splinemod_zen_nugmu)<0.087)
-alt_samp2_final_level_data = ((les_preselect_data==1)*(alt_bdt_les_data>0.0) + (hes_preselect_data==1)*(bdt_hes_data>-0.01))*(numpy.cos(splinemod_zen_data)<0.087)
-alt_samp2_final_level_nue = ((les_preselect_nue==1)*(alt_bdt_les_nue>0.0) + (hes_preselect_nue==1)*(bdt_hes_nue>-0.01))*(numpy.cos(splinemod_zen_nue)<0.087)
-alt_samp2_final_level_nuge = ((les_preselect_nuge==1)*(alt_bdt_les_nuge>0.0) + (hes_preselect_nuge==1)*(bdt_hes_nuge>-0.01))*(numpy.cos(splinemod_zen_nuge)<0.087)
-alt_samp2_final_level_c7437 = ((les_preselect_c7437==1)*(alt_bdt_les_c7437>0.0) + (hes_preselect_c7437==1)*(bdt_hes_c7437>-0.01))*(numpy.cos(splinemod_zen_c7437)<0.087)
-alt_samp2_final_level_c9622 = (les_preselect_c9622==1)*(alt_bdt_les_c9622>0.0)*(numpy.cos(splinemod_zen_c9622)<0.087)
-alt_samp2_final_level_c9255 = (les_preselect_c9255==1)*(alt_bdt_les_c9255>0.0)*(numpy.cos(splinemod_zen_c9255)<0.087)
-
 #import scipy.misc 
 #import scipy
 #scipy.factorial = scipy.misc.factorial
@@ -854,6 +792,19 @@ def EnergyBinMedianRes(energy,res,binzo):
   for k in channybins:
         median_res.append(numpy.median(res[(energy>=k)*(energy<k+de)]))
   return median_res[:-1],channybins[:-1]+de/2.0
+
+def EnergyBinOneSigmaContainedRes(energy,res,binzo):
+  channybins=binzo
+  de=numpy.diff(channybins)[0]
+  containment=0.68
+  contained_res=[]
+  for k in channybins:
+	dres=0.000
+	while 1.0*(res[(energy>=k)*(energy<k+de)] < dres).sum() / len(res[(energy>=k)*(energy<k+de)]) < containment:
+		dres+=0.002
+	contained_res.append(dres)
+  return contained_res[:-1],channybins[:-1]+de/2.0
+
 
 samp2_pull_nch_numu,samp2_median_pull_numu = NchBinMedianPull(merged_nch_numu[(samp2_final_level_numu==1)],para_pull_numu[samp2_final_level_numu==1])
 #samp2_pull_nch_numu,samp2_peak_pull_numu = RameezPullMethod(merged_nch_numu[(samp2_final_level_numu==1)],para_pull_numu[samp2_final_level_numu==1])
@@ -956,15 +907,116 @@ hes_real_final_level_median_res_nugmu = numpy.array(NchBinMedianRes(merged_nch_n
 
 
 
-#from scipy.optimize import curvefit
+nch_real_final_level_data = (real_final_level_data==1) &  (merged_nch_data<61)
+nch_real_final_level_nugmu = (real_final_level_nugmu==1) &  (merged_nch_nugmu<61)
+nch_real_final_level_numu = (real_final_level_numu==1) &  (merged_nch_numu<61)
+nch_real_final_level_nue = (real_final_level_nue==1) &  (merged_nch_nue<61)
+nch_real_final_level_nuge = (real_final_level_nuge==1) &  (merged_nch_nuge<61)
+nch_real_final_level_c9255 = (real_final_level_c9255==1) &  (merged_nch_c9255<61)
+nch_real_final_level_c9622 = (real_final_level_c9622==1) &  (merged_nch_c9622<61)
+nch_real_final_level_c7437 = (real_final_level_c7437==1) &  (merged_nch_c7437<61)
 
-#def pullfit_numu(x,a,b,c,d,e):
-#        val = a+b*x+numpy.power(c*x,2)+numpy.power(d*x,3)+numpy.power(e*x,4)
-#        return val
-#def pullfit_nugmu(x,a,b,c,d,e):
-#        val = a+b*x+numpy.power(c*x,2)+numpy.power(d*x,3)+numpy.power(e*x,4)
-#        return val
+nolow_nch_real_final_level_data = (real_final_level_data==1) &  (merged_nch_data>20)
+nolow_nch_real_final_level_nugmu = (real_final_level_nugmu==1) &  (merged_nch_nugmu>20)
+nolow_nch_real_final_level_numu = (real_final_level_numu==1) &  (merged_nch_numu>20)
+nolow_nch_real_final_level_nue = (real_final_level_nue==1) &  (merged_nch_nue>20)
+nolow_nch_real_final_level_nuge = (real_final_level_nuge==1) &  (merged_nch_nuge>20)
+nolow_nch_real_final_level_c9255 = (real_final_level_c9255==1) &  (merged_nch_c9255>20)
+nolow_nch_real_final_level_c9622 = (real_final_level_c9622==1) &  (merged_nch_c9622>20)
+nolow_nch_real_final_level_c7437 = (real_final_level_c7437==1) &  (merged_nch_c7437>20)
 
-#coeff_numu,covar_numu = curve_fit(pullfit_numu, nchbin_numu[nchbin_numu>15], med_pull_numu[nchbin_numu>15], p0=(4,0.1,0.025,0.005,0.0001), sigma=None)
-#coeff_nugmu,covar_nugmu = curve_fit(pullfit_nugmu, nchbin_nugmu[nchbin_nugmu>15], med_pull_nugmu[nchbin_nugmu>15], p0=(4,0.1,0.025,0.005,0.0001), sigma=None)
+low_nch_real_final_level_data = (real_final_level_data==1) &  (merged_nch_data<=20)
+low_nch_real_final_level_nugmu = (real_final_level_nugmu==1) &  (merged_nch_nugmu<=20)
+low_nch_real_final_level_numu = (real_final_level_numu==1) &  (merged_nch_numu<=20)
+low_nch_real_final_level_nue = (real_final_level_nue==1) &  (merged_nch_nue<=20)
+low_nch_real_final_level_nuge = (real_final_level_nuge==1) &  (merged_nch_nuge<=20)
+low_nch_real_final_level_c9255 = (real_final_level_c9255==1) &  (merged_nch_c9255<=20)
+low_nch_real_final_level_c9622 = (real_final_level_c9622==1) &  (merged_nch_c9622<=20)
+low_nch_real_final_level_c7437 = (real_final_level_c7437==1) &  (merged_nch_c7437<=20)
+
+
+merged_nch_combined_numu = numpy.hstack([merged_nch_numu,merged_nch_nugmu])
+nch_real_final_level_combined_numu = numpy.hstack([(real_final_level_numu==1) &  (merged_nch_numu<61),(real_final_level_nugmu==1) &  (merged_nch_nugmu<61) & (primary_energy_nugmu>195)])
+real_final_level_combined_numu = numpy.hstack([(real_final_level_numu==1),(real_final_level_nugmu==1) & (primary_energy_nugmu>195)])
+nolow_nch_real_final_level_combined_numu = numpy.hstack([(real_final_level_numu==1) &  (merged_nch_numu>20),(real_final_level_nugmu==1) &  (merged_nch_nugmu>20) & (primary_energy_nugmu>195)])
+low_nch_real_final_level_combined_numu = numpy.hstack([(real_final_level_numu==1) &  (merged_nch_numu<=20),(real_final_level_nugmu==1) &  (merged_nch_nugmu<=20) & (primary_energy_nugmu<=195)])
+
+
+
+combined_atmo_numu = numpy.hstack([atmo_numu,atmo_nugmu])
+normed_combined_atmo_numu = numpy.hstack([atmo_numu,0.625*atmo_nugmu])
+splinemod_zen_combined_numu = numpy.hstack([splinemod_zen_numu,splinemod_zen_nugmu])
+splinemod_azi_combined_numu = numpy.hstack([splinemod_azi_numu,splinemod_azi_nugmu])
+spline_rlogl_combined_numu = numpy.hstack([spline_rlogl_numu,spline_rlogl_nugmu])
+finite_z_combined_numu = numpy.hstack([finite_z_numu,finite_z_nugmu])
+avg_distq_combined_numu = numpy.hstack([avg_distq_numu,avg_distq_nugmu])
+dhd_combined_numu = numpy.hstack([dhd_numu,dhd_nugmu])
+combined_primary_energy_numu = numpy.hstack([primary_energy_numu,primary_energy_nugmu])
+combined_spline_primary_diff_numu = numpy.hstack([spline_primary_diff_numu,spline_primary_diff_nugmu])
+combined_primary_daughter_diff_numu = numpy.hstack([primary_daughter_diff_numu,primary_daughter_diff_nugmu])
+combined_cc_numu = numpy.hstack([cc_numu,cc_nugmu])
+real_final_level_combined_numu_cc = (real_final_level_combined_numu) &(combined_cc_numu)
+corrected_samp2_sig_para_combined_numu = numpy.hstack([corrected_samp2_sig_para_numu,corrected_samp2_sig_para_nugmu])
+ldird_combined_numu = numpy.hstack([ldird_numu,ldird_nugmu])
+nlated_combined_numu = numpy.hstack([nlated_numu,nlated_nugmu])
+nearlyd_combined_numu = numpy.hstack([nearlyd_numu,nearlyd_nugmu])
+lempty_combined_numu = numpy.hstack([lempty_numu,lempty_nugmu])
+separation_combined_numu = numpy.hstack([separation_numu,separation_nugmu])
+
+
+
+
+nch_real_final_level_combined_corsk = numpy.hstack([(real_final_level_c9622==1) & (merged_nch_c9622<61),(real_final_level_c9255==1) & (merged_nch_c9255<61)])
+nolow_nch_real_final_level_combined_corsk = numpy.hstack([(real_final_level_c9622==1) & (merged_nch_c9622>20),(real_final_level_c9255==1) & (merged_nch_c9255>20)])
+low_nch_real_final_level_combined_corsk = numpy.hstack([(real_final_level_c9622==1) & (merged_nch_c9622<=20),(real_final_level_c9255==1) & (merged_nch_c9255<=20)])
+real_final_level_combined_corsk = numpy.hstack([(real_final_level_c9622==1),(real_final_level_c9255==1)])
+combined_corsk = numpy.hstack([H3A_C9622EventWeight,C9255EventWeight])
+merged_nch_combined_corsk = numpy.hstack([merged_nch_c9622,merged_nch_c9255])
+splinemod_zen_combined_corsk = numpy.hstack([splinemod_zen_c9622,splinemod_zen_c9255])
+splinemod_azi_combined_corsk = numpy.hstack([splinemod_azi_c9622,splinemod_azi_c9255])
+spline_rlogl_combined_corsk = numpy.hstack([spline_rlogl_c9622,spline_rlogl_c9255])
+dhd_combined_corsk = numpy.hstack([dhd_c9622,dhd_c9255])
+finite_z_combined_corsk = numpy.hstack([finite_z_c9622,finite_z_c9255])
+corrected_samp2_sig_para_combined_corsk = numpy.hstack([corrected_samp2_sig_para_c9622,corrected_samp2_sig_para_c9255])
+
+
+nch_paraboloid_combined_numu = corrected_samp2_sig_para_combined_numu * merged_nch_combined_numu
+nch_paraboloid_numu = corrected_samp2_sig_para_numu * merged_nch_numu
+nch_paraboloid_nugmu = corrected_samp2_sig_para_nugmu * merged_nch_nugmu
+nch_paraboloid_data = corrected_samp2_sig_para_data * merged_nch_data
+
+
+
+
+### MC Investigations ###
+
+res_slice_nugmu = (corrected_samp2_sig_para_nugmu < 0.6) * (corrected_samp2_sig_para_nugmu > 0.3) * (low_nch_real_final_level_nugmu==1)
+res_slice_nue = (corrected_samp2_sig_para_nue < 0.6) * (corrected_samp2_sig_para_nue > 0.3) * (low_nch_real_final_level_nue==1)
+res_slice_data = (corrected_samp2_sig_para_data < 0.6) * (corrected_samp2_sig_para_data > 0.3) * (low_nch_real_final_level_data==1)
+res_slice_numu = (corrected_samp2_sig_para_numu < 0.6) * (corrected_samp2_sig_para_numu > 0.3) * (low_nch_real_final_level_numu==1)
+res_slice_combined_numu = (corrected_samp2_sig_para_combined_numu < 0.6) * (corrected_samp2_sig_para_combined_numu > 0.3) * (low_nch_real_final_level_combined_numu==1)
+res_slice_combined_corsk = (corrected_samp2_sig_para_combined_corsk < 0.6) * (corrected_samp2_sig_para_combined_corsk > 0.3) * (low_nch_real_final_level_combined_corsk==1)
+
+
+energy_c9622 = []
+zenith_c9622 = []
+
+for i in numpy.unique(event_id_c9622):
+	energy_c9622.append(shower_energy_c9622[event_id_c9622 == i][0])
+	zenith_c9622.append(shower_zenith_c9622[event_id_c9622 == i][0])
+
+energy_c9255 = []
+zenith_c9255 = []
+
+for i in numpy.unique(event_id_c9255):
+        energy_c9255.append(shower_energy_c9255[event_id_c9255 == i][0])
+        zenith_c9255.append(shower_zenith_c9255[event_id_c9255 == i][0])
+
+energy_c9255 = numpy.array(energy_c9255)
+zenith_c9255 = numpy.array(zenith_c9255)
+
+energy_c9622 = numpy.array(energy_c9622)
+zenith_c9622 = numpy.array(zenith_c9622)
+
+
 

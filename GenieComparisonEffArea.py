@@ -1,9 +1,9 @@
 import tables,pylab,numpy,pickle
-
+from matplotlib import gridspec
 #from scipy.optimize import curve_fit
 
 
-dat = tables.openFile('third_time/genie_ic.1304_1404.combo_numu_numubar.L6Out_Third.hdf5')
+dat = tables.openFile('paper_tables/Merged_IC86.2012_genie_ic.1460.AllFiles.FINAL.hdf5')
 
 energy = dat.root.I3MCWeightDict.col('PrimaryNeutrinoEnergy')
 oweight = dat.root.I3MCWeightDict.col('OneWeight')
@@ -30,7 +30,7 @@ hes_hlc = dat.root.L4_Variables_HES.col('Nch_HLC')
 dat.close()
 
 
-dat = tables.openFile('third_time/Level5_nugen_numu_IC86.2013.010090.AllSubs.L6Out_Third.hdf5')
+dat = tables.openFile('third_time/genie_ic.1304_1404.combo_numu_numubar.L6Out_Third.hdf5')
 
 energy_nugmu = dat.root.I3MCWeightDict.col('PrimaryNeutrinoEnergy')
 oweight_nugmu = dat.root.I3MCWeightDict.col('OneWeight')
@@ -93,7 +93,7 @@ samp1_final_level = ((les_preselect==1)*(spline_rlogl<7.5) + (hes_preselect==1)*
 
 samp2_final_level = ((les_preselect==1)*(bdt_les>0.0) + (hes_preselect==1)*(bdt_hes>-0.01))*(numpy.cos(splinemod_zen)<0.087)*((180/numpy.pi)*corrected_sig_para<45.0)
 
-samp2_final_level_nugmu = ((les_preselect_nugmu==1)*(bdt_les_nugmu>0.0) + (hes_preselect_nugmu==1)*(bdt_hes_nugmu>-0.01))*(numpy.cos(splinemod_zen_nugmu)<0.087)*((180/numpy.pi)*corrected_sig_para_nugmu<45.0)*(energy_nugmu>190.0)
+samp2_final_level_nugmu = ((les_preselect_nugmu==1)*(bdt_les_nugmu>0.0) + (hes_preselect_nugmu==1)*(bdt_hes_nugmu>-0.01))*(numpy.cos(splinemod_zen_nugmu)<0.087)*((180/numpy.pi)*corrected_sig_para_nugmu<45.0)
 
 
 zenith_samp1 = zenith[(samp1_final_level==1)]
@@ -107,15 +107,15 @@ oweight_samp2 = oweight[(samp2_final_level==1)]
 
 energy_samp2_nugmu = energy_nugmu[(samp2_final_level_nugmu==1)]
 oweight_samp2_nugmu = oweight_nugmu[(samp2_final_level_nugmu==1)]
-zenith_samp2_nugmu = zenith[(samp2_final_level_nugmu==1)]
+zenith_samp2_nugmu = zenith_nugmu[(samp2_final_level_nugmu==1)]
 
 systematic_error_adj = (1-0.01*numpy.sqrt(10.0**2 + 3.0**2))
 
 #dat.close()
-fudgefactor = 1.0
+fudgefactor = 1.57 ### Match NUGEN EffArea to GENIE
 
-nevents = 300000*3999.
-nevents_nugmu = 200000*1000. * fudgefactor
+nevents = 300003*4000.
+nevents_nugmu = 300000*3999.
 
 solidangle = 2*numpy.pi*(1-numpy.cos(95*(numpy.pi/180)))
 
@@ -140,44 +140,41 @@ dE_nugmu = (binny_nugmu[1]-binny_nugmu[0])
 
 #samp1_effarea=pylab.hist(energy_samp1[upgoing_samp1],bins=binny,histtype='step',weights=oweight_samp1[upgoing_samp1]/10000./solidangle/nevents/dE,log=True,lw=2)
 samp2_effarea=pylab.hist(energy_samp2[upgoing_samp2],bins=binny,histtype='step',weights=oweight_samp2[upgoing_samp2]/10000./solidangle/nevents/dE,log=True,lw=2)
-samp2_effarea_nugmu=pylab.hist(energy_samp2_nugmu[upgoing_samp2_nugmu],bins=binny_nugmu,histtype='step',weights=oweight_samp2_nugmu[upgoing_samp2_nugmu]/10000./solidangle/nevents_nugmu/dE_nugmu,log=True,lw=2)
+samp2_effarea_nugmu=pylab.hist(energy_samp2_nugmu[upgoing_samp2_nugmu],bins=binny,histtype='step',weights=oweight_samp2_nugmu[upgoing_samp2_nugmu]/10000./solidangle/nevents_nugmu/dE,log=True,lw=2)
 
 #totarea = leseffarea[0]+heseffarea[0]
+decfilter_0_numu = (numpy.rad2deg(zenith_samp2) > 85.)*(numpy.rad2deg(zenith_samp2) < 100.)
+decfilter_16_numu = (numpy.rad2deg(zenith_samp2) > 100.)*(numpy.rad2deg(zenith_samp2) < 115.)
+decfilter_30_numu = (numpy.rad2deg(zenith_samp2) > 115.)*(numpy.rad2deg(zenith_samp2) < 130.)
+decfilter_45_numu = (numpy.rad2deg(zenith_samp2) > 130.)*(numpy.rad2deg(zenith_samp2) < 145.)
+decfilter_60_numu = (numpy.rad2deg(zenith_samp2) > 145.)*(numpy.rad2deg(zenith_samp2) < 160.)
+decfilter_75_numu = (numpy.rad2deg(zenith_samp2) > 160.)*(numpy.rad2deg(zenith_samp2) < 180.)
+
+decfilter_0_nugmu = (numpy.rad2deg(zenith_samp2) > 85.)*(numpy.rad2deg(zenith_samp2) < 100.)
+decfilter_16_nugmu = (numpy.rad2deg(zenith_samp2) > 100.)*(numpy.rad2deg(zenith_samp2) < 115.)
+decfilter_30_nugmu = (numpy.rad2deg(zenith_samp2) > 115.)*(numpy.rad2deg(zenith_samp2) < 130.)
+decfilter_45_nugmu = (numpy.rad2deg(zenith_samp2) > 130.)*(numpy.rad2deg(zenith_samp2) < 145.)
+decfilter_60_nugmu = (numpy.rad2deg(zenith_samp2) > 145.)*(numpy.rad2deg(zenith_samp2) < 160.)
+decfilter_75_nugmu = (numpy.rad2deg(zenith_samp2) > 160.)*(numpy.rad2deg(zenith_samp2) < 180.)
+### Dec Bands ###
+sa0 = 2*numpy.pi*((1-numpy.cos(numpy.deg2rad(95.))) - (1-numpy.cos(numpy.deg2rad(80.))))
+sa16 = 2*numpy.pi*((1-numpy.cos(numpy.deg2rad(80.))) - (1-numpy.cos(numpy.deg2rad(65.))))
+sa30 = 2*numpy.pi*((1-numpy.cos(numpy.deg2rad(65.))) - (1-numpy.cos(numpy.deg2rad(50.))))
+sa45 = 2*numpy.pi*((1-numpy.cos(numpy.deg2rad(50.))) - (1-numpy.cos(numpy.deg2rad(35.))))
+sa60 = 2*numpy.pi*((1-numpy.cos(numpy.deg2rad(35.))) - (1-numpy.cos(numpy.deg2rad(20.))))
+sa75 = 2*numpy.pi*(1-numpy.cos(numpy.deg2rad(20.)))
+
+
+samp2_effarea_dec0 = pylab.hist(energy_samp2[decfilter_0_numu],bins=binny,histtype='step',weights=oweight_samp2[decfilter_0_numu]/10000./sa0/nevents/dE,log=True,lw=2)
+samp2_effarea_dec16 = pylab.hist(energy_samp2[decfilter_0_numu],bins=binny,histtype='step',weights=oweight_samp2[decfilter_16_numu]/10000./sa0/nevents/dE,log=True,lw=2)
+samp2_effarea_dec30 = pylab.hist(energy_samp2[decfilter_0_numu],bins=binny,histtype='step',weights=oweight_samp2[decfilter_30_numu]/10000./sa0/nevents/dE,log=True,lw=2)
+samp2_effarea_dec45 = pylab.hist(energy_samp2[decfilter_0_numu],bins=binny,histtype='step',weights=oweight_samp2[decfilter_45_numu]/10000./sa0/nevents/dE,log=True,lw=2)
+samp2_effarea_dec60 = pylab.hist(energy_samp2[decfilter_0_numu],bins=binny,histtype='step',weights=oweight_samp2[decfilter_60_numu]/10000./sa0/nevents/dE,log=True,lw=2)
+samp2_effarea_dec75 = pylab.hist(energy_samp2[decfilter_0_numu],bins=binny,histtype='step',weights=oweight_samp2[decfilter_75_numu]/10000./sa0/nevents/dE,log=True,lw=2)
+
 
 plotbinny=binny[:-1]+dE/2
 plotbinny_nugmu=binny_nugmu[:-1]+dE_nugmu/2
-
-pylab.figure(figsize=(10,8))
-#pylab.semilogy(plotbinny,samp1_effarea[0],lw=2,c='b',label="Sample 2 (GENIE)",ls='-')
-pylab.semilogy(plotbinny,samp2_effarea[0],lw=2,c='g',label="IC86-2 Low-En Transient (GENIE)",ls='-')
-#pylab.semilogy(plotbinny,totarea,lw=2,c='k',label="Combined")
-pylab.semilogy(jfenergy,jf_upgoingarea,lw=2, c='r', ls='--',label="IC86-1 PS (Nugen)")
-pylab.axis([4.0,190,10**-5,10**-1])
-pylab.xlabel(r'$E_{\nu}(GeV)$',fontsize=16)
-pylab.ylabel(r'$Effective Area (m^2)$',fontsize=16)
-pylab.xticks(fontsize=16)
-pylab.yticks(fontsize=16)
-pylab.legend(loc='upper left')
-pylab.title(r"Low-En Transient Analysis Effective Area (GENIE)",fontsize=20)
-pylab.grid()
-pylab.savefig("LowEnTransient_EffArea_GENIE_DiffBin")
-
-
-pylab.figure(figsize=(10,8))
-#pylab.semilogy(plotbinny,samp1_effarea[0],lw=2,c='b',label="Sample 2 (GENIE)",ls='-')
-pylab.semilogy(plotbinny,samp2_effarea[0],lw=2,c='g',label="IC86-2 Low-En Transient (GENIE)",ls='-')
-pylab.semilogy(plotbinny_nugmu,1.1819698556266118*samp2_effarea_nugmu[0],lw=2,c='k',label="IC86-2 Low-En Transient (Nugen)",ls='-')
-#pylab.semilogy(plotbinny,totarea,lw=2,c='k',label="Combined")
-pylab.semilogy(jfenergy,jf_upgoingarea,lw=2, c='r', ls='--',label="IC86-1 PS (Nugen)")
-pylab.axis([4.0,400,10**-5,1])
-pylab.xlabel(r'$E_{\nu}(GeV)$',fontsize=16)
-pylab.ylabel(r'$Effective Area (m^2)$',fontsize=16)
-pylab.xticks(fontsize=16)
-pylab.yticks(fontsize=16)
-pylab.legend(loc='upper left')
-pylab.title(r"Low-En Transient Analysis Effective Area",fontsize=20)
-pylab.grid()
-pylab.savefig("LowEnTransient_EffArea_GENIE_Nugen")
 
 reffluxvalue= 1.0 ### dN/dE (100 GeV) GeV^-1 cm^-2 s^-1
 
@@ -199,69 +196,35 @@ e3foldedflux=e3flux*samp2_effarea[0]*10000*dE
 e35foldedflux=e35flux*samp2_effarea[0]*10000*dE
 e25foldedflux=e25flux*samp2_effarea[0]*10000*dE
 
-e3foldedfluence=e3extendedflux*(numpy.hstack([samp2_effarea[0]*dE,samp2_effarea_nugmu[0]*dE_nugmu]))*10000
-e35foldedfluence=e35extendedflux*(numpy.hstack([samp2_effarea[0]*dE,samp2_effarea_nugmu[0]*dE_nugmu]))*10000
-e25foldedfluence=e25extendedflux*(numpy.hstack([samp2_effarea[0]*dE,samp2_effarea_nugmu[0]*dE_nugmu]))*10000
-
-
-
-def areafit_nugmu(x,a,b,c,d,e):
-        val = a+b*x+numpy.power(c*x,2)+numpy.power(d*x,3)+numpy.power(e*x,4)
-        return val
 
 #area_coeff_nugmu,covar_numu = curve_fit(areafit_nugmu, plotbinny_nugmu, 1.1819698556266118*samp2_effarea_nugmu[0], p0=(4,0.1,0.025,0.005,0.0001), sigma=None)
 
 energizer=numpy.linspace(190,1000,10000)
 
-pylab.figure(figsize=(10,8))
+pylab.figure(figsize=(10,12))
+gs = gridspec.GridSpec(2, 1 ,height_ratios=[2, 1])
+pylab.subplot(gs[0])
 #pylab.semilogy(plotbinny,samp1_effarea[0],lw=2,c='b',label="Sample 2 (GENIE)",ls='-')
-pylab.semilogy(plotbinny,samp2_effarea[0],lw=2,c='g',label="IC86-2 Low-En Transient (GENIE)",ls='-')
-#pylab.semilogy(energizer,areafit_numu(energizer,area_coeff_numu[0],area_coeff_numu[1],area_coeff_numu[2],area_coeff_numu[3],area_coeff_numu[4]))
-#pylab.semilogy(plotbinny,totarea,lw=2,c='k',label="Combined")
-pylab.semilogy(jfenergy,jf_upgoingarea,lw=2, c='r', ls='--',label="IC86-1 PS (Nugen)")
-pylab.axis([4.0,190,10**-5,10**-1])
-pylab.xlabel(r'$E_{\nu}(GeV)$',fontsize=16)
-pylab.ylabel(r'$Effective Area (m^2)$',fontsize=16)
-pylab.xticks(fontsize=16)
-pylab.yticks(fontsize=16)
-pylab.legend(loc='upper left')
-pylab.title(r"Low-En Transient Analysis Effective Area (GENIE)",fontsize=20)
-pylab.grid()
-pylab.savefig("LowEnTransient_EffArea_GENIE_DiffBin_WithFit")
-
-
-pylab.figure(figsize=(10,8))
-#pylab.semilogy(plotbinny,samp1_effarea[0],lw=2,c='b',label="Sample 2 (GENIE)",ls='-')
-pylab.semilogy(plotbinny,samp2_effarea[0],lw=2,c='g',label="IC86-2 Low-En Transient (GENIE)",ls='-')
-pylab.semilogy(plotbinny_nugmu,1.1819698556266118*samp2_effarea_nugmu[0],lw=2,c='k',label="IC86-2 Low-En Transient (Nugen)",ls='-')
-pylab.semilogy(energizer,areafit_nugmu(energizer,area_coeff_nugmu[0],area_coeff_nugmu[1],area_coeff_nugmu[2],area_coeff_nugmu[3],area_coeff_nugmu[4]),'k--')
-#pylab.semilogy(plotbinny,totarea,lw=2,c='k',label="Combined")
-pylab.semilogy(jfenergy,jf_upgoingarea,lw=2, c='r', ls='--',label="IC86-1 PS (Nugen)")
-pylab.axis([4.0,400,10**-5,1])
-pylab.xlabel(r'$E_{\nu}(GeV)$',fontsize=16)
-pylab.ylabel(r'$Effective Area (m^2)$',fontsize=16)
-pylab.xticks(fontsize=16)
-pylab.yticks(fontsize=16)
-pylab.legend(loc='upper left')
-pylab.title(r"Low-En Transient Analysis Effective Area",fontsize=20)
-pylab.grid()
-pylab.savefig("LowEnTransient_EffArea_GENIE_Nugen_WithFit")
-
-pylab.figure(figsize=(10,8))
-#pylab.semilogy(plotbinny,samp1_effarea[0],lw=2,c='b',label="Sample 2 (GENIE)",ls='-')
-pylab.semilogy(plotbinny,samp2_effarea[0],lw=2,c='k',label="Low-En Transient Nominal",ls='--')
-pylab.semilogy(plotbinny,systematic_error_adj*samp2_effarea[0],lw=2,c='k',label="Low-En Transient SysError Adjusted",ls='-')
+pylab.semilogy(plotbinny,samp2_effarea[0],lw=2,c='k',label="GENIE 1460",ls='-')
+pylab.semilogy(plotbinny,samp2_effarea_nugmu[0],lw=2,c='k',label="GENIE 1304/1404",ls='--')
 #pylab.semilogy(energizer,areafit_numu(energizer,area_coeff_numu[0],area_coeff_numu[1],area_coeff_numu[2],area_coeff_numu[3],area_coeff_numu[4]))
 #pylab.semilogy(plotbinny,totarea,lw=2,c='k',label="Combined")
 #pylab.semilogy(jfenergy,jf_upgoingarea,lw=2, c='r', ls='--',label="IC86-1 PS (Nugen)")
 pylab.axis([4.0,190,10**-5,10**-2])
-pylab.xlabel(r'$E_{\nu}(GeV)$',fontsize=16)
 pylab.ylabel(r'$Effective Area (m^2)$',fontsize=16)
 pylab.xticks(fontsize=16)
 pylab.yticks(fontsize=16)
 pylab.legend(loc='upper left')
 pylab.title(r"Low-En Transient Analysis Effective Area",fontsize=20)
+area_ratio = samp2_effarea[0]/samp2_effarea_nugmu[0]
+pylab.subplot(gs[1])
+pylab.plot(plotbinny,area_ratio,'ko')
+pylab.xlabel(r'$E_{\nu}(GeV)$',fontsize=16)
+pylab.ylabel(r'$A_{Old}/A_{New} (m^2)$',fontsize=16)
+pylab.hlines(1.0,4,190,colors='k',linestyles='dashed')
 pylab.grid()
-pylab.savefig("LowEnTransient_EffArea_GENIE_WithSystematicAdjustedArea")
+pylab.savefig("LowEnTransient_EffArea_GENIE_Comparison")
+
+pickle.dump(samp2_effarea[0],(open("g1460_numu_effarea_avg.pkl","w"))
 
 
